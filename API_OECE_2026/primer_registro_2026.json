@@ -1,0 +1,16 @@
+{
+  "id": "seace_v3-2026-06",
+  "files": {
+    "csv": "https://contratacionesabiertas.oece.gob.pe/api/v1/file/seace_v3/csv/2026/06/",
+    "csv_es": "https://contratacionesabiertas.oece.gob.pe/api/v1/file/seace_v3/csv/2026/06/es",
+    "xlsx": "https://contratacionesabiertas.oece.gob.pe/api/v1/file/seace_v3/xlsx/2026/06/",
+    "xlsx_es": "https://contratacionesabiertas.oece.gob.pe/api/v1/file/seace_v3/xlsx/2026/06/es",
+    "json": "https://contratacionesabiertas.oece.gob.pe/api/v1/file/seace_v3/json/2026/06/",
+    "sha": "https://contratacionesabiertas.oece.gob.pe/api/v1/file/seace_v3/sha/2026/06/"
+  },
+  "year": "2026",
+  "month": "06",
+  "monthName": "junio",
+  "source": "seace_v3",
+  "timestamp": "2026-06-14T11:05:51.322465-05:00"
+}

@@ -1,0 +1,5 @@
+{
+  "url": "https://contratacionesabiertas.oece.gob.pe/",
+  "content_type": "text/html",
+  "preview": "<!doctype html>\n<html lang=\"es\">\n<head>\n  <meta charset=\"utf-8\">\n  <title>Portal de Contrataciones Abiertas de la Compra PÃºblica de PerÃº</title>\n  <base href=\"/\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n\t<meta name=\"author\" content=\"Organismo Especializado para las Contrataciones PÃºblicas Eficientes (OECE)\">\n  <meta name=\"keywords\" content=\"peru, ocds, datos, abiertos, seace\">\n\t<meta name=\"subject\" content=\"Puedes explorar y visualizar las contrataciones del gobierno del PerÃº\">\n  <meta name=\"description\" content=\"Es un portal para poder visualizar los datos que se encuentran transformados en el estÃ¡ndar OCDS (Open Contracting Data Standard), desde fuentes de datos como los sistemas SEACE V3, SEACE V2 y SEACE V1.\">\n\t<!--<meta property=\"og:image\"  content=\"assets/img/IMAGEN_SOCIAL.png\" />-->\n  <link rel=\"icon\" type=\"image/x-icon\" href=\"favicon.ico\">\n  \n  <!--CSP ngCspNonce=\"XYZ\"-->\n  <meta name=\"CSP-NONCE\" content=\"f603dfb30527d68b8e6f9ffd365d35d4\"/>\n\n"
+}

@@ -1,0 +1,77 @@
+@'
+# ==================================================
+# CREDENCIALES Y CONFIGURACIÓN PRIVADA
+# ==================================================
+.env
+.env.*
+!.env.example
+credenciales.*
+config.local.*
+
+# ==================================================
+# PYTHON
+# ==================================================
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+
+# ==================================================
+# EDITORES
+# ==================================================
+.vscode/
+.idea/
+
+# ==================================================
+# DATOS DESCARGADOS Y GENERADOS
+# ==================================================
+data/
+*.csv
+*.parquet
+*.zip
+*.7z
+*.rar
+
+# Archivos Excel descargados
+*.xlsx
+*.xls
+
+# Permitir documentos específicos
+!DICCIONARIO_MODELO_OECE.xlsx
+
+# ==================================================
+# BASES DE DATOS Y BACKUPS
+# ==================================================
+*.duckdb
+*.duckdb.wal
+*.bak
+*.bacpac
+*.mdf
+*.ldf
+
+# ==================================================
+# ARCHIVOS TEMPORALES
+# ==================================================
+*.log
+*.tmp
+*.temp
+*.part
+~$*
+Thumbs.db
+.DS_Store
+
+# ==================================================
+# RESULTADOS Y SALIDAS DEL ETL
+# ==================================================
+output/
+outputs/
+resultados/
+logs/
+temp/
+tmp/
+'@ | Set-Content -Encoding UTF8 .gitignore
+CSV2/
+*.csv
+*.xlsx

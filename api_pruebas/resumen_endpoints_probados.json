@@ -1,0 +1,172 @@
+[
+  {
+    "url": "https://contratacionesabiertas.oece.gob.pe/",
+    "status_code": 200,
+    "content_type": "text/html"
+  },
+  {
+    "url": "https://contratacionesabiertas.oece.gob.pe/api",
+    "status_code": 200,
+    "content_type": "text/html"
+  },
+  {
+    "url": "https://contratacionesabiertas.oece.gob.pe/api/",
+    "status_code": 200,
+    "content_type": "text/html"
+  },
+  {
+    "url": "https://contratacionesabiertas.oece.gob.pe/api/docs",
+    "status_code": 200,
+    "content_type": "text/html"
+  },
+  {
+    "url": "https://contratacionesabiertas.oece.gob.pe/api/swagger",
+    "status_code": 200,
+    "content_type": "text/html"
+  },
+  {
+    "url": "https://contratacionesabiertas.oece.gob.pe/api/swagger.json",
+    "status_code": 200,
+    "content_type": "text/html"
+  },
+  {
+    "url": "https://contratacionesabiertas.oece.gob.pe/api/openapi.json",
+    "status_code": 200,
+    "content_type": "text/html"
+  },
+  {
+    "url": "https://contratacionesabiertas.oece.gob.pe/openapi.json",
+    "status_code": 200,
+    "content_type": "text/html"
+  },
+  {
+    "url": "https://contratacionesabiertas.oece.gob.pe/swagger.json",
+    "status_code": 200,
+    "content_type": "text/html"
+  },
+  {
+    "url": "https://contratacionesabiertas.oece.gob.pe/descargas",
+    "status_code": 200,
+    "content_type": "text/html"
+  },
+  {
+    "url": "https://contratacionesabiertas.oece.gob.pe/downloads",
+    "status_code": "ERROR",
+    "content_type": ""
+  },
+  {
+    "url": "https://contratacionesabiertas.oece.gob.pe/files",
+    "status_code": 200,
+    "content_type": "text/html"
+  },
+  {
+    "url": "https://contratacionesabiertas.oece.gob.pe/api/files",
+    "status_code": 200,
+    "content_type": "text/html"
+  },
+  {
+    "url": "https://contratacionesabiertas.oece.gob.pe/api/releases",
+    "status_code": 200,
+    "content_type": "text/html"
+  },
+  {
+    "url": "https://contratacionesabiertas.oece.gob.pe/api/records",
+    "status_code": 200,
+    "content_type": "text/html"
+  },
+  {
+    "url": "https://contratacionesabiertas.oece.gob.pe/api/release",
+    "status_code": 200,
+    "content_type": "text/html"
+  },
+  {
+    "url": "https://contratacionesabiertas.oece.gob.pe/api/record",
+    "status_code": 200,
+    "content_type": "text/html"
+  },
+  {
+    "url": "https://contratacionesabiertas.osce.gob.pe/",
+    "status_code": "ERROR",
+    "content_type": ""
+  },
+  {
+    "url": "https://contratacionesabiertas.osce.gob.pe/api",
+    "status_code": "ERROR",
+    "content_type": ""
+  },
+  {
+    "url": "https://contratacionesabiertas.osce.gob.pe/api/",
+    "status_code": "ERROR",
+    "content_type": ""
+  },
+  {
+    "url": "https://contratacionesabiertas.osce.gob.pe/api/docs",
+    "status_code": "ERROR",
+    "content_type": ""
+  },
+  {
+    "url": "https://contratacionesabiertas.osce.gob.pe/api/swagger",
+    "status_code": "ERROR",
+    "content_type": ""
+  },
+  {
+    "url": "https://contratacionesabiertas.osce.gob.pe/api/swagger.json",
+    "status_code": "ERROR",
+    "content_type": ""
+  },
+  {
+    "url": "https://contratacionesabiertas.osce.gob.pe/api/openapi.json",
+    "status_code": "ERROR",
+    "content_type": ""
+  },
+  {
+    "url": "https://contratacionesabiertas.osce.gob.pe/openapi.json",
+    "status_code": "ERROR",
+    "content_type": ""
+  },
+  {
+    "url": "https://contratacionesabiertas.osce.gob.pe/swagger.json",
+    "status_code": "ERROR",
+    "content_type": ""
+  },
+  {
+    "url": "https://contratacionesabiertas.osce.gob.pe/descargas",
+    "status_code": "ERROR",
+    "content_type": ""
+  },
+  {
+    "url": "https://contratacionesabiertas.osce.gob.pe/downloads",
+    "status_code": "ERROR",
+    "content_type": ""
+  },
+  {
+    "url": "https://contratacionesabiertas.osce.gob.pe/files",
+    "status_code": "ERROR",
+    "content_type": ""
+  },
+  {
+    "url": "https://contratacionesabiertas.osce.gob.pe/api/files",
+    "status_code": "ERROR",
+    "content_type": ""
+  },
+  {
+    "url": "https://contratacionesabiertas.osce.gob.pe/api/releases",
+    "status_code": "ERROR",
+    "content_type": ""
+  },
+  {
+    "url": "https://contratacionesabiertas.osce.gob.pe/api/records",
+    "status_code": "ERROR",
+    "content_type": ""
+  },
+  {
+    "url": "https://contratacionesabiertas.osce.gob.pe/api/release",
+    "status_code": "ERROR",
+    "content_type": ""
+  },
+  {
+    "url": "https://contratacionesabiertas.osce.gob.pe/api/record",
+    "status_code": "ERROR",
+    "content_type": ""
+  }
+]
