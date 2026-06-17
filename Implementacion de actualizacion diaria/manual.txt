@@ -1,0 +1,248 @@
+# Implementación del sistema incremental OECE
+
+## Objetivo
+
+El sistema debe consultar diariamente la API de Contrataciones Abiertas del OECE, detectar paquetes mensuales nuevos o modificados, transformar únicamente la información afectada y actualizar el modelo estrella de SQL Server sin duplicar contratos.
+
+La base local validada contiene el histórico desde enero de 2022 hasta junio de 2026. La llave principal de negocio de un contrato es:
+
+`CLAVE_CONTRATO = OCID + "|" + ID_CONTRATO`
+
+La llave permite reconocer si un registro recibido corresponde a un contrato nuevo o a una actualización de un contrato existente.
+
+## Tecnologías
+
+* Python 3.
+* requests para consumir la API y descargar los paquetes.
+* pandas y openpyxl para lectura y limpieza de Excel.
+* pyarrow y Parquet para almacenamiento staging.
+* DuckDB para transformaciones y deduplicación.
+* pyodbc o SQLAlchemy para conectarse a SQL Server.
+* SQL Server como base analítica.
+* Power BI como herramienta de visualización.
+* Programador de tareas de Windows, cron o un ejecutor cloud para programar el proceso diario.
+* Variables de entorno o un gestor de secretos para las credenciales. Las contraseñas no deben escribirse directamente en el código.
+
+## Capas del proceso
+
+### Landing
+
+Almacena los ZIP y Excel originales sin modificarlos:
+
+`data/raw/oece/año/mes/`
+
+Cada paquete debe conservar:
+
+* identificador del paquete;
+* año y mes;
+* timestamp de la API;
+* URL;
+* SHA-256;
+* fecha de descarga;
+* estado del procesamiento.
+
+### Staging
+
+Convierte cada archivo mensual a Parquet:
+
+* contratos;
+* registros;
+* proveedores;
+* partes involucradas.
+
+Las particiones se almacenan por año y mes. Si junio de 2026 cambia, solo se reemplazan las particiones correspondientes a junio de 2026.
+
+### Curated
+
+Construye las tablas limpias y deduplicadas:
+
+* contratos actuales;
+* entidades;
+* proveedores;
+* ubicaciones;
+* monedas;
+* categorías;
+* métodos;
+* relaciones contrato-proveedor.
+
+La dimensión moneda debe generar una sola fila por `CLAVE_MONEDA`. Las variantes “Soles” y “Nuevos Soles” deben pertenecer a la clave `MONEDA|PEN`.
+
+### Data warehouse
+
+El esquema `dw` contiene:
+
+* `FactContrato`;
+* `DimEntidad`;
+* `DimProveedor`;
+* `DimUbicacion`;
+* `DimMoneda`;
+* `DimCategoria`;
+* `DimMetodoContratacion`;
+* `DimFecha`;
+* `BridgeContratoProveedor`.
+
+## Orden de una carga diaria
+
+1. Consultar el catálogo de paquetes de la API.
+2. Comparar el timestamp de cada paquete con `control.ArchivoProcesado`.
+3. Omitir paquetes cuyo timestamp y hash no cambiaron.
+4. Descargar paquetes nuevos o modificados.
+5. Validar que el XLSX sea válido.
+6. Validar hojas y columnas obligatorias.
+7. Transformar únicamente las particiones afectadas.
+8. Cargar los datos transformados en tablas temporales del esquema `stg`.
+9. Actualizar dimensiones.
+10. Insertar o actualizar contratos.
+11. Reconstruir los proveedores de los contratos afectados.
+12. Ejecutar validaciones.
+13. Confirmar la transacción.
+14. Registrar la ejecución.
+15. Solicitar la actualización del modelo de Power BI.
+
+## Casos que debe controlar
+
+### Contrato nuevo con entidad existente
+
+* Buscar la entidad mediante su llave de negocio.
+* Obtener su `EntidadKey`.
+* Insertar el nuevo contrato en `FactContrato`.
+* Insertar sus relaciones con proveedores.
+
+### Contrato nuevo con entidad nueva
+
+* Insertar primero la ubicación, si existe.
+* Insertar la entidad en `DimEntidad`.
+* Recuperar el nuevo `EntidadKey`.
+* Insertar el contrato.
+* Insertar proveedores nuevos y relaciones.
+
+### Contrato existente sin cambios
+
+* Comparar `HASH_FILA`.
+* Si la llave y el hash coinciden, no ejecutar ninguna actualización.
+* Registrar el contrato como revisado en el lote actual.
+
+### Contrato existente modificado
+
+* La clave existe, pero `HASH_FILA` es diferente.
+* Guardar la versión anterior en una tabla histórica o de auditoría.
+* Actualizar monto, moneda, fechas, entidad, categoría, método y demás atributos.
+* Actualizar `HASH_FILA` y fecha de última actualización.
+
+### Cambio en los proveedores
+
+Para cada contrato afectado:
+
+* eliminar las relaciones anteriores de la tabla puente dentro de la misma transacción;
+* insertar la lista actual de proveedores;
+* recalcular la cantidad de proveedores;
+* recalcular el peso de prorrateo.
+
+No debe eliminarse el proveedor de `DimProveedor` porque puede seguir relacionado con otros contratos.
+
+### Nueva moneda, categoría o método
+
+Las dimensiones deben actualizarse antes de cargar la tabla de hechos. La llave sustituta se obtiene después del `INSERT` o se recupera si el valor ya existe.
+
+### Contrato que desaparece de la fuente
+
+No debe eliminarse físicamente de manera automática. Debe marcarse como no presente o no vigente únicamente después de confirmar que la ausencia no se debe a un error temporal del paquete.
+
+## Estrategia de actualización
+
+Cada ejecución debe usar una transacción:
+
+`BEGIN TRANSACTION`
+
+* actualizar dimensiones;
+* actualizar contratos modificados;
+* insertar contratos nuevos;
+* actualizar el puente de proveedores;
+* registrar controles.
+
+Si todas las validaciones terminan correctamente:
+
+`COMMIT`
+
+Ante cualquier error:
+
+`ROLLBACK`
+
+De esta forma no se deja la base parcialmente actualizada.
+
+## Tablas de control
+
+### control.EjecucionETL
+
+* EjecucionId.
+* FechaInicio.
+* FechaFin.
+* Estado.
+* PaquetesDetectados.
+* PaquetesProcesados.
+* ContratosInsertados.
+* ContratosActualizados.
+* EntidadesInsertadas.
+* ProveedoresInsertados.
+* FilasRechazadas.
+* MensajeError.
+
+### control.ArchivoProcesado
+
+* ArchivoId.
+* PaqueteId.
+* Año.
+* Mes.
+* TimestampAPI.
+* SHA256.
+* FechaDescarga.
+* FechaProcesamiento.
+* Estado.
+* UltimaEjecucionId.
+
+### control.ErrorETL
+
+* ErrorId.
+* EjecucionId.
+* Etapa.
+* Archivo.
+* ClaveRegistro.
+* MensajeError.
+* FechaError.
+
+### hist.ContratoVersion
+
+* ClaveContrato.
+* HashFila.
+* Datos de la versión.
+* FechaDesde.
+* FechaHasta.
+* EjecucionId.
+
+## Validaciones obligatorias
+
+Antes de confirmar una carga:
+
+* ninguna `ClaveContrato` duplicada;
+* ninguna clave del puente duplicada;
+* cero referencias huérfanas;
+* ninguna moneda sin correspondencia;
+* contratos nuevos más contratos actualizados coherentes con las filas procesadas;
+* monto prorrateado igual al monto original de contratos con proveedor;
+* fechas futuras separadas para revisión;
+* conteos por año y moneda comparados con el lote anterior;
+* ejecución repetida del mismo paquete sin generar nuevas filas.
+
+## Idempotencia
+
+El sistema debe poder ejecutar dos veces el mismo archivo y producir el mismo resultado. La segunda ejecución debe registrar cero contratos insertados y cero contratos actualizados.
+
+## Frecuencia
+
+El proceso puede ejecutarse diariamente después del horario habitual de publicación del OECE. Se recomienda una ejecución principal y un segundo intento posterior en caso de que el paquete se publique tarde o falle temporalmente la API.
+
+## Power BI
+
+Power BI debe conectarse únicamente al esquema `dw` y a las vistas analíticas. No debe leer los Excel originales ni las tablas staging.
+
+Después de una carga correcta se actualiza el conjunto de datos de Power BI. Si la carga falla, el modelo de Power BI no debe refrescarse para evitar publicar datos incompletos.
